@@ -1,45 +1,29 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import EmployeeForm from "./components/EmployeeForm";
-import EmployeeTable from "./components/EmployeeTable";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
 
 const App = () => {
-    const [employees, setEmployees] = useState([]);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
-    // Fetch employees from backend
-    const fetchEmployees = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/employees");
-            setEmployees(response.data);
-        } catch (error) {
-            console.error("Error fetching employees:", error);
-        }
-    };
+  const fetchTasks = async () => {
+    const response = await axios.get("http://localhost:5002/api/tasks");
+    setTasks(response.data);
+  };
 
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-    return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">Employee Management System</h1>
-
-            {/* Employee Form */}
-            <EmployeeForm 
-                selectedEmployee={selectedEmployee} 
-                setSelectedEmployee={setSelectedEmployee} 
-                fetchEmployees={fetchEmployees} 
-            />
-
-            {/* Employee Table */}
-            <EmployeeTable 
-                employees={employees} 
-                setSelectedEmployee={setSelectedEmployee} 
-                fetchEmployees={fetchEmployees} 
-            />
-        </div>
-    );
+  return (
+    <div className="min-h-screen bg-gray-200 flex justify-center items-center p-6">
+      <div className="max-w-2xl w-full">
+        <h1 className="text-3xl font-bold text-center mb-4">Task Management</h1>
+        <TaskForm fetchTasks={fetchTasks} />
+        <TaskList tasks={tasks} fetchTasks={fetchTasks} />
+      </div>
+    </div>
+  );
 };
 
 export default App;
